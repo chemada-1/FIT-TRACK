@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fit Track - Access</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* --- CUSTOM STYLES (Overriding Bootstrap) --- */
+        
+        :root {
+            --brand-red: #bb131a;     
+            --brand-dark-red: #900f14;
+            --brand-black: #111111;   
+            --dark-bg: #2d3436;       
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('images/background.jpg'); /* Ensure this path is correct */
+            background-size: cover;
+            background-position: center;
+            background-color: #2d3436; /* Fallback color */
+        }
+
+        /* Dark Overlay for better text readability */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 420px; /* Limits width on desktop */
+            margin: 15px; /* Adds spacing on mobile edges */
+            background-color: var(--dark-bg);
+            padding: 40px 30px;
+            border-radius: 8px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            text-align: center;
+            border-top: 5px solid var(--brand-red);
+            position: relative;
+        }
+
+        /* Logo Header */
+        .logo-header {
+            margin-bottom: 25px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 15px;
+        }
+        .logo-header img { max-width: 120px; margin-bottom: 10px; }
+        .logo-header h3 { color: #fff; font-weight: 700; letter-spacing: 2px; }
+        .logo-header span { color: var(--brand-red); }
+
+        /* Bootstrap Input Overrides for Dark Theme */
+        .input-group-text {
+            background-color: var(--brand-black);
+            color: #fff;
+            border: 1px solid #444;
+            border-right: none;
+        }
+        
+        .form-control {
+            border: 1px solid #444;
+            border-left: none;
+            padding: 12px;
+        }
+
+        .form-control:focus {
+            box-shadow: none;
+            border-color: var(--brand-red);
+        }
+
+        /* Fix borders when using input group */
+        .input-group:focus-within .input-group-text {
+            border-color: var(--brand-red);
+        }
+
+        /* Buttons */
+        .btn-brand {
+            width: 100%;
+            background-color: var(--brand-red);
+            color: white;
+            font-weight: bold;
+            padding: 12px;
+            border: none;
+            transition: 0.3s;
+        }
+        .btn-brand:hover { background-color: var(--brand-dark-red); color: white; }
+
+        /* Links */
+        .link-text {
+            color: var(--brand-red);
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .link-text:hover { color: #fff; text-decoration: underline; }
+
+        .text-muted { color: #aaa !important; font-size: 0.9rem; }
+
+        /* Password Toggle */
+        .password-toggle {
+            cursor: pointer;
+            background: white;
+            border: 1px solid #444;
+            border-left: none;
+            color: #777;
+        }
+        .password-toggle:hover { color: var(--brand-red); }
+
+        /* Animation */
+        .form-box { display: none; }
+        .active-form { display: block; animation: fadeIn 0.5s ease forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="logo-header">
+            <img src="images/ftrack_logo.png" alt="Logo" class="img-fluid">
+            <h3>FIT <span>TRACK</span></h3>
+        </div>
+
+        <div id="loginBox" class="form-box active-form">
+            <form id="loginForm">
+                <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                    <input type="email" id="emailInput" class="form-control" placeholder="Email Address" required>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                    <input type="password" id="passwordInput" class="form-control" placeholder="Password" required>
+                    <span class="input-group-text password-toggle" onclick="togglePassword('passwordInput', 'toggleIcon')">
+                        <i class="fas fa-eye" id="toggleIcon"></i>
+                    </span>
+                </div>
+
+                <button type="submit" class="btn btn-brand mb-3">LOGIN</button>
+
+                <div class="mb-3 text-end">
+                    <span class="link-text small" onclick="switchForm('forgot')">Forgot Password?</span>
+                </div>
+
+                <div class="text-muted pt-3 border-top border-secondary">
+                    Don't have an account? <span class="link-text" onclick="switchForm('register')">Register Here</span>
+                </div>
+            </form>
+        </div>
+
+        <div id="registerBox" class="form-box">
+            <form id="registerForm">
+                <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                    <input type="text" class="form-control" placeholder="Full Name" required>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                    <input type="email" class="form-control" placeholder="Email Address" required>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                    <input type="password" id="regPassInput" class="form-control" placeholder="Create Password" required>
+                    <span class="input-group-text password-toggle" onclick="togglePassword('regPassInput', 'regToggleIcon')">
+                        <i class="fas fa-eye" id="regToggleIcon"></i>
+                    </span>
+                </div>
+
+                <button type="submit" class="btn btn-brand mb-3">REGISTER</button>
+
+                <div class="text-muted pt-3 border-top border-secondary">
+                    Already have an account? <span class="link-text" onclick="switchForm('login')">Login Here</span>
+                </div>
+            </form>
+        </div>
+
+        <div id="forgotBox" class="form-box">
+            <form id="forgotForm">
+                <p class="text-muted mb-4">Enter your email address and we'll send you a link to reset your password.</p>
+                
+                <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                    <input type="email" class="form-control" placeholder="Enter your email" required>
+                </div>
+
+                <button type="submit" class="btn btn-brand mb-3">SEND LINK</button>
+
+                <div class="text-muted pt-3 border-top border-secondary">
+                    <span class="link-text" onclick="switchForm('login')">Back to Login</span>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // --- FORM SWITCHING LOGIC ---
+        function switchForm(view) {
+            const loginBox = document.getElementById('loginBox');
+            const registerBox = document.getElementById('registerBox');
+            const forgotBox = document.getElementById('forgotBox');
+
+            loginBox.classList.remove('active-form');
+            registerBox.classList.remove('active-form');
+            forgotBox.classList.remove('active-form');
+
+            // Small delay to allow CSS transition if needed, handled via class switch
+            setTimeout(() => {
+                if (view === 'register') {
+                    registerBox.classList.add('active-form');
+                } else if (view === 'forgot') {
+                    forgotBox.classList.add('active-form');
+                } else {
+                    loginBox.classList.add('active-form');
+                }
+            }, 10);
+        }
+
+        // --- PASSWORD TOGGLE ---
+        function togglePassword(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // --- LOGIN LOGIC ---
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault(); 
+            const email = document.getElementById('emailInput').value;
+            const password = document.getElementById('passwordInput').value;
+
+            if (email === "admin@gmail.com" && password === "password") {
+                alert("Login Successful! Welcome Admin!");
+                window.location.href = 'admin_dashboard.html'; 
+            } else if (email === "staff@gmail.com" && password === "password") {
+                alert("Login Successful! Welcome Staff!");
+                window.location.href = 'staff_dashboard.html';
+            } else if (email === "coach@gmail.com" && password === "password") {
+                alert("Login Successful! Welcome Coach!");
+                window.location.href = 'coach_dashboard.html';
+            } else if (email === "member@gmail.com" && password === "password") {
+                alert("Login Successful! Welcome Member!");
+                window.location.href = 'member_dashboard.html';
+            } else {
+                alert("Invalid Email or Password. Please try again.");
+            }
+        });
+
+        // --- REGISTER LOGIC ---
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert("Registration Successful! Please log in.");
+            switchForm('login'); 
+        });
+
+        // --- FORGOT PASSWORD LOGIC ---
+        document.getElementById('forgotForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert("Reset link sent to your email!");
+            switchForm('login'); 
+        });
+    </script>
+</body>
+</html>
